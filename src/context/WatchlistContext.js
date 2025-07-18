@@ -7,9 +7,7 @@ export const WatchlistProvider = ({ children }) => {
 
   useEffect(() => {
     const stored = localStorage.getItem('watchlist');
-    if (stored) {
-      setWatchlist(JSON.parse(stored));
-    }
+    if (stored) setWatchlist(JSON.parse(stored));
   }, []);
 
   useEffect(() => {
@@ -21,9 +19,8 @@ export const WatchlistProvider = ({ children }) => {
       const exists = prev.find(m => m.id === movie.id);
       if (exists) {
         return prev.filter(m => m.id !== movie.id);
-      } else {
-        return [...prev, movie];
       }
+      return [...prev, movie];
     });
   };
 
