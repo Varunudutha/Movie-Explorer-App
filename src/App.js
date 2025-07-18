@@ -115,7 +115,7 @@ const App = () => {
     <WatchlistProvider>
       <div className={darkMode ? 'bg-dark text-light min-vh-100' : 'bg-light text-dark min-vh-100'}>
         <Container className="py-4">
-          <h1 className="mb-4 text-center">🎬 Movie Explorer</h1>
+          <h1 className="mb-4 text-center">Ⓜ️ MovieFlix</h1>
 
           <div className="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
             <SearchBar query={query} onSearch={handleSearch} />

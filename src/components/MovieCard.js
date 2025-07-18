@@ -18,11 +18,20 @@ const MovieCard = ({ movie, onSelect }) => {
 
   const releaseYear = release_date ? release_date.split('-')[0] : 'N/A';
 
-  // Truncate overview text for card
   const truncateOverview = (text, maxLength = 100) => {
     if (!text) return 'No description available.';
     return text.length > maxLength ? text.slice(0, maxLength) + '...' : text;
   };
+
+  const safeVoteAverage = typeof vote_average === 'number' ? vote_average.toFixed(1) : 'N/A';
+  const badgeVariant =
+    typeof vote_average === 'number'
+      ? vote_average >= 7
+        ? 'success'
+        : vote_average >= 5
+        ? 'warning'
+        : 'danger'
+      : 'secondary';
 
   return (
     <Card onClick={onSelect} style={{ cursor: 'pointer', minHeight: '480px' }} className="h-100">
@@ -30,14 +39,14 @@ const MovieCard = ({ movie, onSelect }) => {
       <Card.Body className="d-flex flex-column">
         <Card.Title>{title}</Card.Title>
         <div className="mb-2 text-muted" style={{ fontSize: '0.9rem' }}>
-          {releaseYear} | <Badge bg="info">{original_language.toUpperCase()}</Badge>
+          {releaseYear} | <Badge bg="info">{original_language?.toUpperCase() || 'N/A'}</Badge>
         </div>
         <Card.Text style={{ flexGrow: 1 }}>{truncateOverview(overview)}</Card.Text>
         <div className="mt-auto d-flex justify-content-between align-items-center">
-          <Badge bg={vote_average >= 7 ? 'success' : vote_average >= 5 ? 'warning' : 'danger'}>
-            ⭐ {vote_average.toFixed(1)}
+          <Badge bg={badgeVariant}>
+            ⭐ {safeVoteAverage}
           </Badge>
-          <small className="text-muted">{vote_count} votes</small>
+          <small className="text-muted">{vote_count || 0} votes</small>
         </div>
       </Card.Body>
     </Card>
