@@ -26,7 +26,7 @@ const [topPopular, setTopPopular] = useState([]);
     try {
       const res = await axios.get(`https://api.themoviedb.org/3/search/movie`, {
         params: {
-          api_key: process.env.REACT_APP_TMDB_API_KEY,
+          api_key: import.meta.env.VITE_TMDB_API_KEY,
           query,
           page,
           primary_release_year: year || undefined,
