@@ -1,5 +1,6 @@
-import React from 'react';
-import { Card, Badge } from 'react-bootstrap';
+import React, { useContext } from 'react';
+import { Card, Badge, Button } from 'react-bootstrap';
+import { WatchlistContext } from '../context/WatchlistContext';
 
 const MovieCard = ({ movie, onSelect }) => {
   const {
@@ -10,7 +11,12 @@ const MovieCard = ({ movie, onSelect }) => {
     overview,
     vote_count,
     original_language,
+    id
   } = movie;
+
+  const { toggleWatchlist, watchlist } = useContext(WatchlistContext);
+
+  const isInWatchlist = watchlist.some((m) => m.id === id);
 
   const posterUrl = poster_path
     ? `https://image.tmdb.org/t/p/w500${poster_path}`
@@ -34,21 +40,30 @@ const MovieCard = ({ movie, onSelect }) => {
       : 'secondary';
 
   return (
-    <Card onClick={onSelect} style={{ cursor: 'pointer', minHeight: '480px' }} className="h-100">
-      <Card.Img variant="top" src={posterUrl} alt={title} />
-      <Card.Body className="d-flex flex-column">
-        <Card.Title>{title}</Card.Title>
-        <div className="mb-2 text-muted" style={{ fontSize: '0.9rem' }}>
-          {releaseYear} | <Badge bg="info">{original_language?.toUpperCase() || 'N/A'}</Badge>
-        </div>
-        <Card.Text style={{ flexGrow: 1 }}>{truncateOverview(overview)}</Card.Text>
-        <div className="mt-auto d-flex justify-content-between align-items-center">
-          <Badge bg={badgeVariant}>
-            ⭐ {safeVoteAverage}
-          </Badge>
-          <small className="text-muted">{vote_count || 0} votes</small>
-        </div>
-      </Card.Body>
+    <Card style={{ minHeight: '520px' }} className="h-100">
+      <div onClick={onSelect} style={{ cursor: 'pointer' }}>
+        <Card.Img variant="top" src={posterUrl} alt={title} />
+        <Card.Body className="d-flex flex-column">
+          <Card.Title>{title}</Card.Title>
+          <div className="mb-2 text-muted" style={{ fontSize: '0.9rem' }}>
+            {releaseYear} | <Badge bg="info">{original_language?.toUpperCase() || 'N/A'}</Badge>
+          </div>
+          <Card.Text style={{ flexGrow: 1 }}>{truncateOverview(overview)}</Card.Text>
+          <div className="mt-auto d-flex justify-content-between align-items-center">
+            <Badge bg={badgeVariant}>⭐ {safeVoteAverage}</Badge>
+            <small className="text-muted">{vote_count || 0} votes</small>
+          </div>
+        </Card.Body>
+      </div>
+      <Card.Footer className="text-center">
+        <Button
+          variant={isInWatchlist ? 'danger' : 'success'}
+          onClick={() => toggleWatchlist(movie)}
+          size="sm"
+        >
+          {isInWatchlist ? 'Remove from Watchlist' : 'Add to Watchlist'}
+        </Button>
+      </Card.Footer>
     </Card>
   );
 };
