@@ -24,3 +24,9 @@ A responsive and interactive movie explorer built using **React**, **Bootstrap**
 - 🌐 TMDB API
 
 
+
+## 🌐 Live Demo
+
+Check out the live app here: [Movie Explorer Live]([https://your-vercel-app-url.vercel.app](https://movie-explorer-app-git-master-varun-uduthas-projects.vercel.app
+))
+
