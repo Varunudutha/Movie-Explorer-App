@@ -64,15 +64,49 @@ It offers a cinematic user experience with secure authentication, personalized w
 
 ## 📁 Project Structure
 
-src/
-├── components/ # Reusable UI components
-├── pages/ # Home, Login, Signup, Profile, Watchlist
-├── context/ # Auth & Theme contexts
-├── services/ # Firebase & TMDB services
-├── hooks/ # Custom hooks
-├── styles/ # Global & component styles
-├── firebase.js # Firebase configuration
-└── App.jsx # Main routing
+movie-explorer-app/
+│
+├── public/
+│ ├── index.html
+│ └── manifest.json
+│
+├── src/
+│ ├── components/
+│ │ ├── SearchBar.jsx
+│ │ ├── Navbar.jsx
+│ │ ├── Footer.jsx
+│ │ └── MovieCard.jsx
+│ │
+│ ├── pages/
+│ │ ├── Home.jsx
+│ │ ├── Login.jsx
+│ │ ├── Signup.jsx
+│ │ ├── Profile.jsx
+│ │ └── Watchlist.jsx
+│ │
+│ ├── context/
+│ │ ├── AuthContext.jsx
+│ │ └── ThemeContext.jsx
+│ │
+│ ├── services/
+│ │ ├── tmdb.js
+│ │ └── firebaseService.js
+│ │
+│ ├── hooks/
+│ │ └── useDebounce.js
+│ │
+│ ├── styles/
+│ │ └── global.css
+│ │
+│ ├── firebase.js
+│ ├── App.jsx
+│ └── index.js
+│
+├── .gitignore
+├── package.json
+├── package-lock.json
+└── README.md
+
 
 
 ---
@@ -145,15 +179,14 @@ Designed modern UI with dark/day mode and smooth animations
 
 Deployed using Vercel with GitHub CI/CD
 
-🙌 Author
+## 🙌 Author
 
-Udutha Varun
+**Udutha Varun**
 
-GitHub: https://github.com/Varunudutha
+- **GitHub:** [https://github.com/Varunudutha](https://github.com/Varunudutha)
+- **LinkedIn:** [https://www.linkedin.com/in/varun-udutha-67b137265](https://www.linkedin.com/in/varun-udutha-67b137265)
+- **Portfolio:** [https://varunudutha.github.io/varun-portfolio/](https://varunudutha.github.io/varun-portfolio/)
 
-LinkedIn: https://www.linkedin.com/in/varun-udutha-67b137265
-
-Portfolio: https://varunudutha.github.io/varun-portfolio/
 
 📄 License
 
