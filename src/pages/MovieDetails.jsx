@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { Container, Row, Col, Badge, Button } from 'react-bootstrap';
 import tmdb from '../services/tmdbApi';
 import MovieCarousel from '../components/MovieCarousel';
-import TrailerPlayer from '../components/TrailerPlayer';
+import TrailerModal from '../components/TrailerModal';
 import useTrailer from '../hooks/useTrailer';
 import { FaPlay } from 'react-icons/fa';
 
@@ -16,7 +16,7 @@ const MovieDetails = () => {
     const [showTrailer, setShowTrailer] = useState(false);
 
     // Use custom hook for trailer logic
-    const { videoKey, isAvailable } = useTrailer(id);
+    const { videoKey, isAvailable, loading: trailerLoading } = useTrailer(id);
 
     useEffect(() => {
         const getDetail = async () => {
@@ -75,15 +75,25 @@ const MovieDetails = () => {
                                 ))}
                             </div>
                         </div>
-                        <Button
-                            variant="light"
-                            size="lg"
-                            className="fw-bold px-4"
-                            onClick={() => setShowTrailer(true)}
-                            disabled={!isAvailable}
-                        >
-                            <FaPlay className="me-2" /> {isAvailable ? 'Play Trailer' : 'No Trailer'}
-                        </Button>
+                        {trailerLoading ? (
+                            <Button variant="light" size="lg" className="fw-bold px-4" disabled>
+                                <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                Checking...
+                            </Button>
+                        ) : isAvailable ? (
+                            <Button
+                                variant="light"
+                                size="lg"
+                                className="fw-bold px-4"
+                                onClick={() => setShowTrailer(true)}
+                            >
+                                <FaPlay className="me-2" /> Play Trailer
+                            </Button>
+                        ) : (
+                            <Button variant="secondary" size="lg" className="fw-bold px-4" disabled>
+                                No Trailer Available
+                            </Button>
+                        )}
                     </Container>
                 </div>
             </div>
@@ -130,8 +140,8 @@ const MovieDetails = () => {
                 </div>
             </Container>
 
-            {/* Trailer Player Component */}
-            <TrailerPlayer
+            {/* Trailer Modal Component */}
+            <TrailerModal
                 videoKey={videoKey}
                 show={showTrailer}
                 onClose={() => setShowTrailer(false)}

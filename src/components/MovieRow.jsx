@@ -48,7 +48,7 @@ const MovieRow = ({ title, fetchFn, isLargeRow, data }) => {
 
     return (
         <div className="movie-row my-4 ps-4 position-relative">
-            <h4 className="text-white fw-bold mb-3 d-flex align-items-center gap-2">
+            <h4 className="fw-bold mb-3 d-flex align-items-center gap-2" style={{ color: 'var(--text-primary)' }}>
                 {title}
                 {loading && <Spinner animation="border" size="sm" variant="secondary" />}
             </h4>

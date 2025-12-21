@@ -11,13 +11,18 @@ export const ThemeProvider = ({ children }) => {
     const { currentUser } = useAuth();
 
     // Check local storage or default to dark (true) for initial state
+    // Check local storage or system preference for initial state
     const [isDark, setIsDark] = useState(() => {
-        const savedTheme = localStorage.getItem('theme');
         try {
-            return savedTheme ? JSON.parse(savedTheme) : true;
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme !== null) {
+                return JSON.parse(savedTheme);
+            }
+            // Fallback to system preference
+            return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
         } catch (e) {
-            console.warn("Invalid theme in localStorage, defaulting to dark.", e);
-            return true;
+            console.warn("Error reading theme preference:", e);
+            return true; // Default to dark safe mode
         }
     });
 

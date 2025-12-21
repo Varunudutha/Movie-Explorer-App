@@ -1,44 +1,37 @@
 import { useState, useEffect } from 'react';
 import tmdb from '../services/tmdbApi';
 
-const useTrailer = (movieId) => {
+const useTrailer = (movie) => {
+    // Support both passing just ID or full movie object
+    const movieId = typeof movie === 'object' ? movie?.id : movie;
+
     const [videoKey, setVideoKey] = useState(null);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
     useEffect(() => {
+        if (!movieId) {
+            setVideoKey(null);
+            return;
+        }
+
         const fetchTrailer = async () => {
-            if (!movieId) {
-                setLoading(false);
-                return;
-            }
-
+            setLoading(true);
             try {
-                setLoading(true);
                 const response = await tmdb.getVideos(movieId);
-                const videos = response.data.results;
+                const videos = response.data.results || [];
 
-                // Filter for YouTube trailers
+                // Filter for YouTube trailers only
                 const trailers = videos.filter(
                     (vid) => vid.site === 'YouTube' && vid.type === 'Trailer'
                 );
 
-                // Priority:
-                // 1. Official Trailer (exact match logic or checking name)
-                // 2. Any Trailer
-                // 3. Fallback to similar clips if trailer not found (optional, but per req we want trailers)
-                // We will stick to strict trailer requirement but maybe just pick the best one.
+                // Priority: Official trailer first, otherwise just the first one
+                const official = trailers.find(t => t.official);
+                const selected = official || trailers[0];
 
-                let selectedTrailer = trailers.find(
-                    (vid) => vid.name.toLowerCase().includes('official')
-                );
+                setVideoKey(selected ? selected.key : null);
 
-                if (!selectedTrailer && trailers.length > 0) {
-                    selectedTrailer = trailers[0]; // Fallback to first available trailer
-                }
-
-                setVideoKey(selectedTrailer ? selectedTrailer.key : null);
-                setError(null);
             } catch (err) {
                 console.error('Error fetching trailer:', err);
                 setError(err);
@@ -51,7 +44,12 @@ const useTrailer = (movieId) => {
         fetchTrailer();
     }, [movieId]);
 
-    return { videoKey, loading, error, isAvailable: !!videoKey };
+    return {
+        videoKey,
+        loading,
+        error,
+        isAvailable: !!videoKey
+    };
 };
 
 export default useTrailer;

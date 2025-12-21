@@ -1,34 +1,60 @@
 :root {
-  /* Core Colors */
-  --netflix-red: #e50914;
+  /* Core Brand Colors */
+  --netflix-red: #E50914;
+  --accent-color: #E50914;
 
-  /* Semantic Variables (Dark Default) */
-  --bg-primary: #141414;
-  --bg-secondary: #181818;
-  --bg-glass: rgba(20, 20, 20, 0.85);
-  --bg-input: rgba(255, 255, 255, 0.1);
+  /* Dark Theme (Default) - STRICT Cinematic Black */
+  --bg-primary: #0B0B0B;
+  /* Requested: #0B0B0B */
+  --bg-secondary: #141414;
+  /* Card bg requested: #141414 - using as secondary layer too */
+  --bg-glass: rgba(11, 11, 11, 0.95);
+  --bg-input: rgba(255, 255, 255, 0.15);
 
-  --text-primary: #ffffff;
-  --text-secondary: #b3b3b3;
-  --text-muted: #6c757d;
+  --card-bg: #141414;
+  /* Requested: #141414 */
+  --card-border: rgba(255, 255, 255, 0.1);
+  --card-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+  /* Subtle shadow for dark mode, mostly rely on contrast */
+  --card-hover-shadow: 0 8px 24px rgba(0, 0, 0, 0.7);
 
-  --border-color: rgba(255, 255, 255, 0.1);
-  --shadow-color: rgba(0, 0, 0, 0.5);
+  --text-primary: #FFFFFF;
+  /* Requested: #FFFFFF */
+  --text-secondary: #B3B3B3;
+  /* Requested: #B3B3B3 */
+  --text-muted: #6B7280;
+
+  --border-color: rgba(255, 255, 255, 0.15);
 }
 
-/* Light Theme Overrides */
+/* Light Theme Overrides - Clean White */
 body.light-theme {
-  --bg-primary: #ffffff;
-  --bg-secondary: #f8f9fa;
-  --bg-glass: rgba(255, 255, 255, 0.85);
+  --bg-primary: #FFFFFF;
+  /* Requested: #FFFFFF */
+  --bg-secondary: #F5F5F5;
+  /* Requested: #F5F5F5 */
+  --bg-glass: rgba(255, 255, 255, 0.95);
   --bg-input: rgba(0, 0, 0, 0.05);
 
-  --text-primary: #141414;
-  --text-secondary: #4a4a4a;
-  --text-muted: #6c757d;
+  --card-bg: #F5F5F5;
+  /* Requested: #F5F5F5 - Wait, card bg on light mode might need to be white if page is F5F5F5 or vice versa. 
+                                   User said: Light Mode BG: #FFFFFF, Card BG: #F5F5F5. 
+                                   Actually standard practice is usually Grey BG -> White Card for pop.
+                                   But IF Page is White (#FFFFFF), Card must be #F5F5F5 (Grey) to distinguish?
+                                   Or maybe Page is White, Card is White with Shadow? 
+                                   User specifically asked: "Light Mode Background: #FFFFFF", "Card background: #F5F5F5". I will follow strict request. */
+  --card-border: rgba(0, 0, 0, 0.08);
+  --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  /* Soft shadow */
+  --card-hover-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
 
-  --border-color: rgba(0, 0, 0, 0.1);
-  --shadow-color: rgba(0, 0, 0, 0.1);
+  --text-primary: #111111;
+  /* Requested: #111111 */
+  --text-secondary: #555555;
+  /* Requested: #555555 */
+  --text-muted: #888888;
+
+  --border-color: rgba(0, 0, 0, 0.12);
 }
 
 body {
@@ -38,13 +64,16 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
   background-color: var(--bg-primary);
   color: var(--text-primary);
+
   overflow-x: hidden;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition: background-color 0.4s ease, color 0.4s ease;
+  /* Smoother transition */
 }
 
-/* Custom Scrollbar */
+/* Custom Scrollbar - Themed */
 ::-webkit-scrollbar {
   width: 8px;
 }
@@ -54,30 +83,63 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--bg-secondary);
+  background: var(--text-muted);
+  /* Better visibility */
   border-radius: 4px;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--bg-primary);
 }
 
 ::-webkit-scrollbar-thumb:hover {
   background: var(--text-secondary);
 }
 
+/* Utilities */
 .text-netflix-red {
   color: var(--netflix-red);
 }
 
-.bg-netflix-black {
-  background-color: var(--bg-primary) !important;
+/* Unified Card Class */
+.theme-card {
+  background-color: var(--card-bg);
+  border: 1px solid var(--card-border);
+  box-shadow: var(--card-shadow);
+  color: var(--text-primary);
+  border-radius: 8px;
+  /* Slightly more rounded */
+  transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.3s ease, border-color 0.3s ease;
+  overflow: hidden;
 }
 
-.bg-netflix-dark-gray {
-  background-color: var(--bg-secondary) !important;
+.theme-card:hover {
+  transform: scale(1.03);
+  /* Subtle premium scale */
+  box-shadow: var(--card-hover-shadow);
+  border-color: var(--adjust-border, var(--border-color));
+  z-index: 10;
 }
 
+/* Buttons */
+.btn-netflix {
+  background-color: var(--netflix-red);
+  color: white;
+  border: none;
+  font-weight: 600;
+  padding: 0.5rem 1.5rem;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.btn-netflix:hover {
+  background-color: #f40612;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(229, 9, 20, 0.4);
+  color: white;
+}
+
+/* Nav Links */
 .nav-link {
   color: var(--text-secondary) !important;
-  transition: color 0.3s;
+  transition: color 0.3s ease;
   font-weight: 500;
 }
 
@@ -86,65 +148,74 @@ body {
   color: var(--text-primary) !important;
 }
 
-.btn-netflix {
-  background-color: var(--netflix-red);
-  color: white;
-  border: none;
-  font-weight: bold;
-  padding: 0.5rem 1.5rem;
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.btn-netflix:hover {
-  background-color: #f40612;
-  transform: scale(1.05);
-  color: white;
-  box-shadow: 0 4px 12px rgba(229, 9, 20, 0.4);
-}
-
-/* Movie Card Hover */
-.movie-card {
-  transition: transform 0.3s ease-in-out, z-index 0.3s;
-  cursor: pointer;
-  border-radius: 4px;
-  overflow: hidden;
-  position: relative;
-}
-
-.movie-card:hover {
-  transform: scale(1.1);
-  /* Slight Zoom */
-  z-index: 10;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
-}
-
+/* Hero Banner */
 .hero-banner {
   background-size: cover;
   background-position: center top;
-  height: 60vh;
-  /* Large banner */
+  height: 65vh;
+  /* Slightly taller */
   position: relative;
   display: flex;
   align-items: center;
 }
 
+/* Cinematic Gradient Overlay */
 .hero-overlay {
-  background: linear-gradient(to top, var(--netflix-black), transparent);
+  background: linear-gradient(to top,
+      var(--bg-primary) 0%,
+      rgba(var(--bg-primary), 0.6) 50%,
+      rgba(0, 0, 0, 0.3) 100%);
   position: absolute;
   bottom: 0;
   width: 100%;
   height: 100%;
 }
 
-.hero-content {
-  z-index: 1;
-  max-width: 600px;
-  padding-left: 3rem;
-  padding-bottom: 3rem;
+/* Helper to force dark/light backgrounds on specific areas if needed */
+.bg-theme-main {
+  background-color: var(--bg-primary) !important;
 }
 
+.bg-theme-sec {
+  background-color: var(--bg-secondary) !important;
+}
+
+/* Responsive adjustments */
+/* Responsive adjustments */
 @media (max-width: 768px) {
   .hero-content {
     padding-left: 1.5rem;
   }
 }
+
+/* Theme-aware Form Controls */
+.form-control,
+.form-select {
+  background-color: var(--bg-input);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  /* transition: background-color 0.3s, border-color 0.3s, color 0.3s; */
+}
+
+/* Fix for invisible options in Dark Mode */
+.form-select option {
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+.form-control:focus,
+.form-select:focus {
+  background-color: var(--bg-input);
+  border-color: var(--netflix-red);
+  /* Premium focus */
+  color: var(--text-primary);
+  box-shadow: 0 0 0 0.25rem rgba(229, 9, 20, 0.25);
+}
+
+.form-control::placeholder {
+  color: var(--text-muted);
+}
+
+/* Fix for Select dropdown arrow in Dark Mode if needed (Bootstrap usually handles this via SVG, but color might be issue) */
+/* We might need to override the background-image for the chevron if it's too dark in dark mode, but standard Bootstrap usually adapts or we can force it.
+   For now let's hope standard URL encoding works or we might need a filter. */

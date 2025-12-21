@@ -5,7 +5,7 @@ import { WatchlistContext } from '../context/WatchlistContext';
 import { FaPlus, FaCheck, FaInfoCircle, FaPlay } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
 import useTrailer from '../hooks/useTrailer';
-import TrailerPlayer from './TrailerPlayer';
+import TrailerModal from './TrailerModal';
 
 const MovieCard = ({ movie }) => {
     const {
@@ -24,23 +24,16 @@ const MovieCard = ({ movie }) => {
     const [isHovered, setIsHovered] = useState(false);
     const [showTrailer, setShowTrailer] = useState(false);
 
-    // Trailer Hook (only fetch if hovered likely or on click for optimisation? 
-    // Actually for 'Play' button availability we might want it, but let's just assume play works or fails gracefully)
-    // To make it super fast, we can fetch on hover.
-    const { videoKey } = useTrailer(isHovered ? id : null);
+    // Trailer Hook
+    const { videoKey, isAvailable } = useTrailer((isHovered || showTrailer) ? movie : null);
 
     const isInWatchlist = watchlist.some((m) => m.id === id);
 
     const displayTitle = title || name;
 
-    // Images
     const posterUrl = poster_path
         ? `https://image.tmdb.org/t/p/w500${poster_path}`
         : 'https://via.placeholder.com/500x750?text=No+Image';
-
-    const backdropUrl = backdrop_path
-        ? `https://image.tmdb.org/t/p/w780${backdrop_path}`
-        : posterUrl; // Fallback to poster if backdrops missing
 
     const handleNavigate = () => {
         navigate(`/movie/${id}`);
@@ -53,44 +46,29 @@ const MovieCard = ({ movie }) => {
 
     const handlePlayClick = (e) => {
         e.stopPropagation();
-        if (videoKey) {
+        if (isAvailable) {
             setShowTrailer(true);
         } else {
-            // If no trailer immediately, maybe navigate or just show info
             navigate(`/movie/${id}`);
-        }
-    };
-
-    // Variants for animation
-    const cardVariants = {
-        idle: { scale: 1, zIndex: 1 },
-        hover: {
-            scale: 1.4,
-            zIndex: 10,
-            transition: { duration: 0.3, delay: 0.4 } // Delay to prevent accidental triggers
         }
     };
 
     return (
         <>
             <motion.div
-                className="movie-card position-relative bg-dark rounded-2 overflow-hidden mx-1"
-                style={{ width: '100%', minWidth: '200px', cursor: 'pointer', transformOrigin: 'center center' }}
-                initial="idle"
-                whileHover="hover"
+                className="theme-card position-relative mx-1"
+                style={{ width: '100%', minWidth: '200px', cursor: 'pointer' }}
                 onHoverStart={() => setIsHovered(true)}
                 onHoverEnd={() => setIsHovered(false)}
-                variants={cardVariants}
                 onClick={handleNavigate}
+                layout
             >
-                {/* Image Container - Swaps to backdrop on hover for "Netflix" feel if desired, 
-                    but sticking to poster for smooth consistency often works better unless we expand wide. 
-                    Let's keep poster but maybe darken it. */}
+                {/* Image Container */}
                 <div className="ratio ratio-2x3 position-relative">
                     <img
                         src={posterUrl}
                         alt={displayTitle}
-                        className="w-100 h-100 object-fit-cover rounded-2"
+                        className="w-100 h-100 object-fit-cover"
                     />
                 </div>
 
@@ -98,13 +76,13 @@ const MovieCard = ({ movie }) => {
                 <AnimatePresence>
                     {isHovered && (
                         <motion.div
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
+                            transition={{ duration: 0.2 }}
                             className="position-absolute top-0 start-0 w-100 h-100 d-flex flex-column justify-content-end p-3"
                             style={{
-                                background: 'linear-gradient(to top, rgba(0,0,0,0.95), rgba(0,0,0,0.4) 60%, transparent)',
-                                boxShadow: '0 4px 30px rgba(0,0,0,0.5)'
+                                background: 'linear-gradient(to top, rgba(0,0,0,0.95), rgba(0,0,0,0.6) 50%, rgba(0,0,0,0.1))',
                             }}
                         >
                             <h6 className="text-white fw-bold mb-2 small text-truncate">{displayTitle}</h6>
@@ -114,8 +92,7 @@ const MovieCard = ({ movie }) => {
                                 <Badge bg={vote_average >= 7 ? "success" : "warning"} className="px-1 text-black">
                                     {vote_average?.toFixed(1)}
                                 </Badge>
-                                <span>• {movie.adult ? '18+' : 'PG-13'}</span>
-                                {/* We could map genres if we had the list, skipping for brevity/perf */}
+                                <span className="text-white-50">• {movie.adult ? '18+' : 'PG-13'}</span>
                             </div>
 
                             {/* Action Buttons Row */}
@@ -128,13 +105,13 @@ const MovieCard = ({ movie }) => {
                                         style={{ width: 32, height: 32 }}
                                         onClick={handlePlayClick}
                                     >
-                                        <FaPlay size={12} />
+                                        <FaPlay size={10} className="text-black" />
                                     </Button>
                                     <Button
                                         variant="secondary"
                                         size="sm"
                                         className="rounded-circle p-0 d-flex align-items-center justify-content-center hover-scale border-0"
-                                        style={{ width: 32, height: 32, background: 'rgba(255,255,255,0.2)' }}
+                                        style={{ width: 32, height: 32, background: 'rgba(255,255,255,0.2)', color: 'white' }}
                                         onClick={handleWatchlistClick}
                                     >
                                         {isInWatchlist ? <FaCheck className="text-success" size={12} /> : <FaPlus size={12} />}
@@ -144,10 +121,10 @@ const MovieCard = ({ movie }) => {
                                     variant="outline-light"
                                     size="sm"
                                     className="rounded-circle p-0 d-flex align-items-center justify-content-center border-0"
-                                    style={{ width: 32, height: 32 }}
+                                    style={{ width: 32, height: 32, background: 'transparent' }}
                                     onClick={(e) => { e.stopPropagation(); navigate(`/movie/${id}`); }}
                                 >
-                                    <FaInfoCircle size={16} />
+                                    <FaInfoCircle size={18} />
                                 </Button>
                             </div>
                         </motion.div>
@@ -156,10 +133,10 @@ const MovieCard = ({ movie }) => {
             </motion.div>
 
             {/* Trailer Modal specific to this card's play button */}
-            <TrailerPlayer
-                videoKey={videoKey}
+            <TrailerModal
                 show={showTrailer}
                 onClose={() => setShowTrailer(false)}
+                videoKey={videoKey}
             />
         </>
     );

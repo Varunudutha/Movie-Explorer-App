@@ -3,8 +3,8 @@ import { Card, Placeholder } from 'react-bootstrap';
 
 const SkeletonCard = () => {
     return (
-        <Card style={{ minHeight: '300px', backgroundColor: '#222' }} className="h-100 border-0">
-            <div style={{ aspectRatio: '2/3', backgroundColor: '#333' }} className="w-100 placeholder-wave">
+        <Card style={{ minHeight: '300px', backgroundColor: 'var(--card-bg)' }} className="h-100 border-0">
+            <div style={{ aspectRatio: '2/3', backgroundColor: 'var(--bg-secondary)', opacity: 0.5 }} className="w-100 placeholder-wave">
                 <span className="placeholder w-100 h-100"></span>
             </div>
             <Card.Body>

@@ -72,9 +72,9 @@ const tmdb = {
     const url = 'trending/tv/day';
     return tmdbApi.get(url, { params });
   },
-  getVideos: (id) => {
+  getVideos: (id, params = {}) => {
     const url = 'movie/' + id + '/videos';
-    return tmdbApi.get(url, { params: {} });
+    return tmdbApi.get(url, { params });
   },
   search: (query, params) => {
     const url = 'search/movie';

@@ -3,7 +3,7 @@ import { Button, Container } from 'react-bootstrap';
 import { FaPlay, FaInfoCircle } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import useTrailer from '../hooks/useTrailer';
-import TrailerPlayer from './TrailerPlayer';
+import TrailerModal from './TrailerModal';
 
 const HeroBanner = ({ movie }) => {
     const navigate = useNavigate();
@@ -38,8 +38,8 @@ const HeroBanner = ({ movie }) => {
             }}
         >
             {/* Gradient Overlays for readability and smooth transition to dark content */}
-            <div className="position-absolute top-0 start-0 w-100 h-100" style={{ background: 'linear-gradient(to top, #141414 10%, transparent 90%)' }}></div>
-            <div className="position-absolute top-0 start-0 w-100 h-100" style={{ background: 'linear-gradient(to right, rgba(20,20,20,0.8) 0%, rgba(20,20,20,0) 60%)' }}></div>
+            <div className="position-absolute top-0 start-0 w-100 h-100" style={{ background: 'linear-gradient(to top, var(--bg-primary) 10%, transparent 90%)' }}></div>
+            <div className="position-absolute top-0 start-0 w-100 h-100" style={{ background: 'linear-gradient(to right, var(--bg-primary) 0%, transparent 60%)', opacity: 0.9 }}></div>
 
             <div className="hero-content position-relative h-100 d-flex flex-column justify-content-center px-4 px-md-5" style={{ zIndex: 2, maxWidth: '750px', paddingTop: '80px' }}>
                 <h1 className="fw-bold display-3 mb-3 text-white" style={{ textShadow: '2px 2px 4px rgba(0,0,0,0.5)' }}>
@@ -81,7 +81,7 @@ const HeroBanner = ({ movie }) => {
             </div>
 
             {/* Trailer Modal */}
-            <TrailerPlayer
+            <TrailerModal
                 videoKey={videoKey}
                 show={showTrailer}
                 onClose={() => setShowTrailer(false)}

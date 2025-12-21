@@ -24,7 +24,7 @@ const Home = () => {
     }, []);
 
     return (
-        <div className="home-page" style={{ paddingBottom: '50px', backgroundColor: '#141414', minHeight: '100vh' }}>
+        <div className="home-page" style={{ paddingBottom: '50px', minHeight: '100vh', transition: 'background-color 0.4s ease', backgroundColor: 'var(--bg-primary)' }}>
             {/* 1. Hero Banner */}
             <HeroBanner movie={heroMovie} />
 

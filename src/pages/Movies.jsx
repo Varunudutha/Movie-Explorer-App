@@ -99,89 +99,92 @@ const Movies = () => {
     }, [loading]);
 
     return (
-        <Container className="py-4" style={{ marginTop: '80px' }}>
-            <h2 className="mb-4 fw-bold">{queryParam ? `Results for "${queryParam}"` : 'Explore Movies'}</h2>
 
-            {/* Filters */}
-            <Row className="mb-4 g-2">
-                <Col md={3}>
-                    <Form.Select className="bg-dark text-white border-secondary" value={selectedGenre} onChange={e => setSelectedGenre(e.target.value)}>
-                        <option value="">All Genres</option>
-                        {genres.map(g => <option key={g.id} value={g.id}>{g.name}</option>)}
-                    </Form.Select>
-                </Col>
-                <Col md={2}>
-                    <Form.Control
-                        type="number"
-                        placeholder="Year"
-                        className="bg-dark text-white border-secondary"
-                        value={year}
-                        onChange={e => setYear(e.target.value)}
-                    />
-                </Col>
-                <Col md={3}>
-                    <Form.Select className="bg-dark text-white border-secondary" value={language} onChange={e => setLanguage(e.target.value)}>
-                        <option value="">All Languages</option>
-                        <option value="en">English</option>
-                        <option value="hi">Hindi</option>
-                        <option value="es">Spanish</option>
-                        <option value="fr">French</option>
-                        <option value="ko">Korean</option>
-                        {/* Add more as needed */}
-                    </Form.Select>
-                </Col>
-                <Col md={4}>
-                    <Form.Select className="bg-dark text-white border-secondary" value={sort} onChange={e => setSort(e.target.value)}>
-                        <option value="popularity.desc">Most Popular</option>
-                        <option value="vote_average.desc">Top Rated</option>
-                        <option value="release_date.desc">Newest Releases</option>
-                    </Form.Select>
-                </Col>
-            </Row>
+        <div className="page-container" style={{ backgroundColor: 'var(--bg-primary)', minHeight: '100vh', paddingTop: '80px', transition: 'background-color 0.3s ease' }}>
+            <Container className="py-4">
+                <h2 className="mb-4 fw-bold">{queryParam ? `Results for "${queryParam}"` : 'Explore Movies'}</h2>
 
-            <Row className="mb-4">
-                <Col className="d-flex justify-content-end">
-                    <Button
-                        variant="outline-secondary"
-                        size="sm"
-                        onClick={() => {
-                            setSelectedGenre('');
-                            setYear('');
-                            setLanguage('');
-                            setSort('popularity.desc');
-                            setPage(1);
-                        }}
-                        disabled={!selectedGenre && !year && !language && sort === 'popularity.desc'}
-                    >
-                        Reset Filters
-                    </Button>
-                </Col>
-            </Row>
-
-            {/* Grid */}
-            <Row>
-                {movies.map((movie, idx) => (
-                    <Col key={`${movie.id}-${idx}`} xs={6} md={4} lg={3} xl={2} className="mb-4">
-                        <MovieCard movie={movie} />
+                {/* Filters */}
+                <Row className="mb-4 g-2">
+                    <Col md={3}>
+                        <Form.Select value={selectedGenre} onChange={e => setSelectedGenre(e.target.value)}>
+                            <option value="">All Genres</option>
+                            {genres.map(g => <option key={g.id} value={g.id}>{g.name}</option>)}
+                        </Form.Select>
                     </Col>
-                ))}
-
-                {movies.length === 0 && !loading && (
-                    <div className="text-center py-5">
-                        <h4>No movies found. Try adjusting filters.</h4>
-                    </div>
-                )}
-
-                {loading && Array.from({ length: 12 }).map((_, idx) => (
-                    <Col key={`skel-${idx}`} xs={6} md={4} lg={3} xl={2} className="mb-4">
-                        <SkeletonCard />
+                    <Col md={2}>
+                        <Form.Control
+                            type="number"
+                            placeholder="Year"
+                            value={year}
+                            onChange={e => setYear(e.target.value)}
+                        />
                     </Col>
-                ))}
-            </Row>
+                    <Col md={3}>
+                        <Form.Select value={language} onChange={e => setLanguage(e.target.value)}>
+                            <option value="">All Languages</option>
+                            <option value="en">English</option>
+                            <option value="hi">Hindi</option>
+                            <option value="es">Spanish</option>
+                            <option value="fr">French</option>
+                            <option value="ko">Korean</option>
+                            {/* Add more as needed */}
+                        </Form.Select>
+                    </Col>
+                    <Col md={4}>
+                        <Form.Select value={sort} onChange={e => setSort(e.target.value)}>
+                            <option value="popularity.desc">Most Popular</option>
+                            <option value="vote_average.desc">Top Rated</option>
+                            <option value="release_date.desc">Newest Releases</option>
+                        </Form.Select>
+                    </Col>
+                </Row>
 
-            <div ref={loader} />
-        </Container>
+                <Row className="mb-4">
+                    <Col className="d-flex justify-content-end">
+                        <Button
+                            variant="outline-secondary"
+                            size="sm"
+                            onClick={() => {
+                                setSelectedGenre('');
+                                setYear('');
+                                setLanguage('');
+                                setSort('popularity.desc');
+                                setPage(1);
+                            }}
+                            disabled={!selectedGenre && !year && !language && sort === 'popularity.desc'}
+                        >
+                            Reset Filters
+                        </Button>
+                    </Col>
+                </Row>
+
+                {/* Grid */}
+                <Row>
+                    {movies.map((movie, idx) => (
+                        <Col key={`${movie.id}-${idx}`} xs={6} md={4} lg={3} xl={2} className="mb-4">
+                            <MovieCard movie={movie} />
+                        </Col>
+                    ))}
+
+                    {movies.length === 0 && !loading && (
+                        <div className="text-center py-5">
+                            <h4>No movies found. Try adjusting filters.</h4>
+                        </div>
+                    )}
+
+                    {loading && Array.from({ length: 12 }).map((_, idx) => (
+                        <Col key={`skel-${idx}`} xs={6} md={4} lg={3} xl={2} className="mb-4">
+                            <SkeletonCard />
+                        </Col>
+                    ))}
+                </Row>
+
+                <div ref={loader} />
+            </Container>
+        </div>
     );
 };
+
 
 export default Movies;
