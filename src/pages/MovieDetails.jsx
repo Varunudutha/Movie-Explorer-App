@@ -1,14 +1,22 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { Container, Row, Col, Badge, Button } from 'react-bootstrap';
+import { useParams, useNavigate } from 'react-router-dom';
+import { Container, Row, Col, Badge, Button, Spinner } from 'react-bootstrap';
 import tmdb from '../services/tmdbApi';
 import MovieCarousel from '../components/MovieCarousel';
 import TrailerModal from '../components/TrailerModal';
 import useTrailer from '../hooks/useTrailer';
-import { FaPlay } from 'react-icons/fa';
+import ReviewForm from '../components/Reviews/ReviewForm';
+import ReviewList from '../components/Reviews/ReviewList';
+import useMovieReviews from '../hooks/useMovieReviews';
+// Auth import removed
+import Navbar from '../layouts/Navbar';
+import Footer from '../layouts/Footer';
+import ReviewHeader from '../components/Reviews/ReviewHeader';
+import { FaPlay, FaStar } from 'react-icons/fa';
 
 const MovieDetails = () => {
     const { id } = useParams();
+    const navigate = useNavigate();
     const [movie, setMovie] = useState(null);
     const [cast, setCast] = useState([]);
     const [similar, setSimilar] = useState([]);
@@ -17,6 +25,18 @@ const MovieDetails = () => {
 
     // Use custom hook for trailer logic
     const { videoKey, isAvailable, loading: trailerLoading } = useTrailer(id);
+
+    // Use custom hook for movie reviews logic
+    const {
+        reviews,
+        loading: reviewsLoading,
+        saveReview,
+        stats,
+        sortBy,
+        setSortBy
+    } = useMovieReviews(id);
+
+    // Auth logic removed
 
     useEffect(() => {
         const getDetail = async () => {
@@ -39,14 +59,19 @@ const MovieDetails = () => {
         getDetail();
     }, [id]);
 
-    if (loading) return <div className="text-center py-5 mt-5"><div className="spinner-border text-danger"></div></div>;
-    if (!movie) return null;
+    // Smooth Scroll to Trailer function (optional but nice)
+    const scrollToTrailer = () => {
+        document.getElementById('trailer')?.scrollIntoView({ behavior: 'smooth' });
+    };
+
+    if (loading) return <div className="text-center mt-5"><Spinner animation="border" variant="danger" /></div>;
+    if (!movie) return <div className="text-center mt-5">Movie not found</div>;
 
     const backdropUrl = movie.backdrop_path ? `https://image.tmdb.org/t/p/original${movie.backdrop_path}` : '';
-    // const posterUrl = movie.poster_path ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` : ''; // Unused for now
 
     return (
-        <div>
+        <div style={{ backgroundColor: 'var(--bg-primary)', minHeight: '100vh', paddingBottom: '50px' }}>
+            <Navbar />
             {/* Banner */}
             <div
                 style={{
@@ -102,7 +127,7 @@ const MovieDetails = () => {
                 <Row>
                     <Col md={8}>
                         <h4 className="mb-3">Overview</h4>
-                        <p className="lead text-light-gray">{movie.overview}</p>
+                        <p className="lead text-secondary">{movie.overview}</p>
 
                         <h4 className="mt-5 mb-3">Top Cast</h4>
                         <div className="d-flex gap-3 overflow-auto pb-3 scrollbar-none">
@@ -138,6 +163,49 @@ const MovieDetails = () => {
                 <div className="mt-5">
                     <MovieCarousel title="Similar Movies" movies={similar} />
                 </div>
+
+                {/* Open Reviews Section - Full Width Premium Layout */}
+                <div className="full-width-section position-relative py-5 mt-5" style={{
+                    background: 'linear-gradient(to bottom, transparent, var(--bg-secondary) 15%, var(--bg-secondary) 85%, transparent)',
+                    marginLeft: 'calc(-50vw + 50%)',
+                    marginRight: 'calc(-50vw + 50%)',
+                    paddingLeft: 'calc(50vw - 50%)',
+                    paddingRight: 'calc(50vw - 50%)',
+                    width: '100vw'
+                }}>
+                    <Container style={{ zIndex: 1, position: 'relative' }}>
+
+                        <ReviewHeader stats={stats} sortBy={sortBy} setSortBy={setSortBy} />
+
+                        <Row>
+                            <Col lg={4} className="order-lg-2 mb-4 mb-lg-0">
+                                {/* Form Column - Sticky on Desktop */}
+                                <div className="sticky-top" style={{ top: '100px', zIndex: 2 }}>
+
+                                    {/* OPEN SUBMISSION: Always Show Form */}
+                                    <ReviewForm
+                                        onSave={(name, rating, text) => saveReview(name, rating, text, {
+                                            title: movie.title,
+                                            poster_path: movie.poster_path
+                                        })}
+                                    />
+
+                                </div>
+                            </Col>
+
+                            <Col lg={8} className="order-lg-1">
+                                {/* Reviews List Column */}
+                                {reviewsLoading ? (
+                                    <div className="text-center py-5">
+                                        <Spinner animation="border" variant="danger" />
+                                    </div>
+                                ) : (
+                                    <ReviewList reviews={reviews} />
+                                )}
+                            </Col>
+                        </Row>
+                    </Container>
+                </div>
             </Container>
 
             {/* Trailer Modal Component */}
@@ -146,6 +214,7 @@ const MovieDetails = () => {
                 show={showTrailer}
                 onClose={() => setShowTrailer(false)}
             />
+            <Footer />
         </div>
     );
 };

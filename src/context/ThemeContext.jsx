@@ -53,14 +53,11 @@ export const ThemeProvider = ({ children }) => {
 
     // Effect to apply styles to body and save to localStorage (always, for redundancy/guest)
     // Effect to apply styles via CSS class
+    // Effect to apply styles via data-theme attribute
     useEffect(() => {
         localStorage.setItem('theme', JSON.stringify(isDark));
-
-        if (isDark) {
-            document.body.classList.remove('light-theme');
-        } else {
-            document.body.classList.add('light-theme');
-        }
+        const theme = isDark ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', theme);
     }, [isDark]);
 
     const toggleTheme = async () => {

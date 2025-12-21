@@ -53,11 +53,12 @@ export const AuthProvider = ({ children }) => {
     // Memoize the value object to prevent unnecessary re-renders
     const value = React.useMemo(() => ({
         currentUser,
+        loading, // Export loading state
         signup,
         login,
         logout,
         googleSignIn
-    }), [currentUser]);
+    }), [currentUser, loading]);
 
     return (
         <AuthContext.Provider value={value}>

@@ -1,60 +1,59 @@
 :root {
-  /* Core Brand Colors */
+  /* Strict Theme Variables (User Requested) */
+  --bg-light: #ffffff;
+  --text-light: #111827;
+  --card-light: #f9fafb;
+
+  --bg-dark: #0b0f19;
+  --text-dark: #e5e7eb;
+  --card-dark: #111827;
+
+  /* Legacy / Application Mapping */
   --netflix-red: #E50914;
   --accent-color: #E50914;
 
-  /* Dark Theme (Default) - STRICT Cinematic Black */
-  --bg-primary: #0B0B0B;
-  /* Requested: #0B0B0B */
+  /* Default to Dark Theme (Cinematic) */
+  --bg-primary: var(--bg-dark);
   --bg-secondary: #141414;
-  /* Card bg requested: #141414 - using as secondary layer too */
-  --bg-glass: rgba(11, 11, 11, 0.95);
-  --bg-input: rgba(255, 255, 255, 0.15);
+  /* Keep for specific dark sections */
+  --bg-glass: rgba(11, 15, 25, 0.75);
+  /* More transparent for blur */
+  --bg-input: rgba(255, 255, 255, 0.08);
 
-  --card-bg: #141414;
-  /* Requested: #141414 */
-  --card-border: rgba(255, 255, 255, 0.1);
-  --card-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-  /* Subtle shadow for dark mode, mostly rely on contrast */
-  --card-hover-shadow: 0 8px 24px rgba(0, 0, 0, 0.7);
+  --card-bg: var(--card-dark);
+  --card-border: rgba(255, 255, 255, 0.08);
+  --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  /* Deeper shadow */
 
-  --text-primary: #FFFFFF;
-  /* Requested: #FFFFFF */
+  --text-primary: var(--text-dark);
   --text-secondary: #B3B3B3;
-  /* Requested: #B3B3B3 */
   --text-muted: #6B7280;
 
-  --border-color: rgba(255, 255, 255, 0.15);
+  --border-color: rgba(255, 255, 255, 0.1);
+
+  --glass-border: 1px solid rgba(255, 255, 255, 0.08);
+  --glass-highlight: rgba(255, 255, 255, 0.03);
 }
 
-/* Light Theme Overrides - Clean White */
-body.light-theme {
-  --bg-primary: #FFFFFF;
-  /* Requested: #FFFFFF */
-  --bg-secondary: #F5F5F5;
-  /* Requested: #F5F5F5 */
-  --bg-glass: rgba(255, 255, 255, 0.95);
-  --bg-input: rgba(0, 0, 0, 0.05);
+/* Light Theme Override */
+[data-theme="light"] {
+  --bg-primary: var(--bg-light);
+  --bg-secondary: #F3F4F6;
+  --bg-glass: rgba(255, 255, 255, 0.85);
+  --bg-input: rgba(0, 0, 0, 0.04);
 
-  --card-bg: #F5F5F5;
-  /* Requested: #F5F5F5 - Wait, card bg on light mode might need to be white if page is F5F5F5 or vice versa. 
-                                   User said: Light Mode BG: #FFFFFF, Card BG: #F5F5F5. 
-                                   Actually standard practice is usually Grey BG -> White Card for pop.
-                                   But IF Page is White (#FFFFFF), Card must be #F5F5F5 (Grey) to distinguish?
-                                   Or maybe Page is White, Card is White with Shadow? 
-                                   User specifically asked: "Light Mode Background: #FFFFFF", "Card background: #F5F5F5". I will follow strict request. */
-  --card-border: rgba(0, 0, 0, 0.08);
-  --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  /* Soft shadow */
-  --card-hover-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+  --card-bg: var(--card-light);
+  --card-border: rgba(0, 0, 0, 0.06);
+  --card-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
 
-  --text-primary: #111111;
-  /* Requested: #111111 */
-  --text-secondary: #555555;
-  /* Requested: #555555 */
-  --text-muted: #888888;
+  --text-primary: var(--text-light);
+  --text-secondary: #4B5563;
+  --text-muted: #9CA3AF;
 
-  --border-color: rgba(0, 0, 0, 0.12);
+  --border-color: rgba(0, 0, 0, 0.08);
+
+  --glass-border: 1px solid rgba(0, 0, 0, 0.05);
+  --glass-highlight: rgba(0, 0, 0, 0.02);
 }
 
 body {
@@ -68,9 +67,7 @@ body {
   background-color: var(--bg-primary);
   color: var(--text-primary);
 
-  overflow-x: hidden;
-  transition: background-color 0.4s ease, color 0.4s ease;
-  /* Smoother transition */
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* Custom Scrollbar - Themed */
@@ -216,6 +213,87 @@ body {
   color: var(--text-muted);
 }
 
-/* Fix for Select dropdown arrow in Dark Mode if needed (Bootstrap usually handles this via SVG, but color might be issue) */
-/* We might need to override the background-image for the chevron if it's too dark in dark mode, but standard Bootstrap usually adapts or we can force it.
-   For now let's hope standard URL encoding works or we might need a filter. */
+
+/* --- PREMIUM REVIEWS UI --- */
+
+/* Glass Card Premium */
+.glass-card-premium {
+  background: var(--bg-glass);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: var(--glass-border);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+  border-radius: 16px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Inner highlight shine */
+.glass-card-premium::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -50%;
+  width: 200%;
+  height: 100%;
+  background: linear-gradient(to right,
+      transparent 0%,
+      var(--glass-highlight) 50%,
+      transparent 100%);
+  transform: skewX(-25deg);
+  transition: transform 0.5s;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.glass-card-premium:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+  border-color: rgba(229, 9, 20, 0.3);
+  /* Red accent bleed */
+}
+
+.glass-card-premium:hover::before {
+  opacity: 1;
+  transition: opacity 0.3s;
+  /* We don't animate position here to avoid cheap shimmer, just subtle light */
+}
+
+/* Avatar Gradient */
+.avatar-gradient {
+  background: linear-gradient(135deg, #1f1f1f 0%, #333 100%);
+  color: white;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="light"] .avatar-gradient {
+  background: linear-gradient(135deg, #e0e0e0 0%, #f5f5f5 100%);
+  color: #333;
+}
+
+/* Cinematic Typography */
+.text-cinematic {
+  font-weight: 300;
+  letter-spacing: 0.5px;
+  line-height: 1.6;
+}
+
+/* Gradient Band */
+.reviews-band {
+  position: relative;
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  margin-right: calc(-50vw + 50%);
+  padding: 4rem 0;
+  background: linear-gradient(180deg,
+      transparent 0%,
+      var(--bg-secondary) 20%,
+      var(--bg-secondary) 80%,
+      transparent 100%);
+  z-index: 0;
+}

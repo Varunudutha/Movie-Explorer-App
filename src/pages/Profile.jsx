@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { Container, Row, Col, Form, Button, Alert, Spinner } from 'react-bootstrap';
 import { useAuth } from '../context/AuthContext';
@@ -7,6 +8,7 @@ import AvatarUpload from '../components/profile/AvatarUpload';
 import GenderToggle from '../components/profile/GenderToggle';
 import GenreSelector from '../components/profile/GenreSelector';
 import SubscriptionCard from '../components/profile/SubscriptionCard';
+import ReviewHistory from '../components/profile/ReviewHistory';
 
 const Profile = () => {
     const { currentUser } = useAuth();
@@ -166,6 +168,11 @@ const Profile = () => {
                 </Row>
             </Form>
 
+            {/* Review History Section */}
+            <div className="mt-5">
+                <ReviewHistory />
+            </div>
+
             <style jsx>{`
                 .bg-glass-panel {
                     background-color: var(--bg-secondary);
@@ -180,7 +187,8 @@ const Profile = () => {
                     to { opacity: 1; transform: translateY(0); }
                 }
             `}</style>
-        </Container>
+
+        </Container >
     );
 };
 
