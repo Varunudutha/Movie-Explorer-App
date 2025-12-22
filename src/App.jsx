@@ -5,8 +5,8 @@ import { ThemeProvider } from './context/ThemeContext';
 import { WatchlistProvider } from './context/WatchlistContext';
 import { AuthProvider, useAuth } from './context/AuthContext';
 
-import Navbar from './layouts/Navbar';
-import Footer from './layouts/Footer';
+import MainLayout from './layouts/MainLayout';
+import ImmersiveLayout from './layouts/ImmersiveLayout';
 
 // Pages
 import Home from './pages/Home';
@@ -40,50 +40,50 @@ const AppContent = () => {
     }
 
     return (
-        <div className="d-flex flex-column min-vh-100">
-            {currentUser && <Navbar />}
-            <div className="flex-grow-1">
-                <Routes>
-                    {currentUser ? (
-                        <>
-                            {/* Authenticated Routes */}
-                            <Route path="/" element={<Home />} />
-                            <Route path="/movies" element={<Movies />} />
-                            <Route path="/movie/:id" element={<MovieDetails />} />
-                            <Route path="/watchlist" element={<Watchlist />} />
-                            <Route path="/profile" element={<Profile />} />
+        <Routes>
+            {currentUser ? (
+                <>
+                    {/* Routes with MainLayout (Target: HomeIn, Listings, Footer Pages) */}
+                    <Route element={<MainLayout />}>
+                        <Route path="/" element={<Home />} />
+                        <Route path="/movies" element={<Movies />} />
+                        <Route path="/watchlist" element={<Watchlist />} />
+                        <Route path="/profile" element={<Profile />} />
 
-                            {/* Footer Pages */}
-                            <Route path="/about" element={<About />} />
-                            <Route path="/contact" element={<Contact />} />
-                            <Route path="/faq" element={<FAQ />} />
-                            <Route path="/service-code" element={<ServiceCode />} />
-                            <Route path="/privacy" element={<Privacy />} />
-                            <Route path="/terms" element={<Terms />} />
-                            <Route path="/cookies" element={<CookiePrefs />} />
-                            <Route path="/corporate" element={<CorporateInfo />} />
+                        {/* Footer Pages */}
+                        <Route path="/about" element={<About />} />
+                        <Route path="/contact" element={<Contact />} />
+                        <Route path="/faq" element={<FAQ />} />
+                        <Route path="/service-code" element={<ServiceCode />} />
+                        <Route path="/privacy" element={<Privacy />} />
+                        <Route path="/terms" element={<Terms />} />
+                        <Route path="/cookies" element={<CookiePrefs />} />
+                        <Route path="/corporate" element={<CorporateInfo />} />
+                    </Route>
 
-                            {/* Redirect Login/Signup to Home if already logged in */}
-                            <Route path="/login" element={<Navigate to="/" />} />
-                            <Route path="/signup" element={<Navigate to="/" />} />
+                    {/* Routes with ImmersiveLayout (Target: Details) */}
+                    <Route element={<ImmersiveLayout />}>
+                        <Route path="/movie/:id" element={<MovieDetails />} />
+                    </Route>
 
-                            {/* Catch all */}
-                            <Route path="*" element={<Navigate to="/" />} />
-                        </>
-                    ) : (
-                        <>
-                            {/* Public Routes */}
-                            <Route path="/login" element={<Login />} />
-                            <Route path="/signup" element={<Signup />} />
+                    {/* Redirect Login/Signup to Home if already logged in */}
+                    <Route path="/login" element={<Navigate to="/" />} />
+                    <Route path="/signup" element={<Navigate to="/" />} />
 
-                            {/* Redirect everything else to Login */}
-                            <Route path="*" element={<Navigate to="/login" />} />
-                        </>
-                    )}
-                </Routes>
-            </div>
-            {currentUser && <Footer />}
-        </div>
+                    {/* Catch all */}
+                    <Route path="*" element={<Navigate to="/" />} />
+                </>
+            ) : (
+                <>
+                    {/* Public Routes */}
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/signup" element={<Signup />} />
+
+                    {/* Redirect everything else to Login */}
+                    <Route path="*" element={<Navigate to="/login" />} />
+                </>
+            )}
+        </Routes>
     );
 };
 

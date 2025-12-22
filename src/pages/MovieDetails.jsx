@@ -9,8 +9,10 @@ import ReviewForm from '../components/Reviews/ReviewForm';
 import ReviewList from '../components/Reviews/ReviewList';
 import useMovieReviews from '../hooks/useMovieReviews';
 // Auth import removed
-import Navbar from '../layouts/Navbar';
-import Footer from '../layouts/Footer';
+import Navbar from '../layouts/Navbar'; // Keep one import if we were using it inside, BUT we are removing the usage. Wait, ImmersiveLayout handles Navbar. So we should REMOVE the import too to be clean.
+// However, the user request says "Remove all redundant imports". Since Layout handles it, I will remove it.
+
+// Footer removed - handled by Layout
 import ReviewHeader from '../components/Reviews/ReviewHeader';
 import { FaPlay, FaStar } from 'react-icons/fa';
 
@@ -71,7 +73,6 @@ const MovieDetails = () => {
 
     return (
         <div style={{ backgroundColor: 'var(--bg-primary)', minHeight: '100vh', paddingBottom: '50px' }}>
-            <Navbar />
             {/* Banner */}
             <div
                 style={{
@@ -214,7 +215,7 @@ const MovieDetails = () => {
                 show={showTrailer}
                 onClose={() => setShowTrailer(false)}
             />
-            <Footer />
+            {/* Footer removed - handled by Layout */}
         </div>
     );
 };
